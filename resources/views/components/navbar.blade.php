@@ -12,6 +12,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link</a>
                 </li>
+                <!-- Nuovo link per tutti gli articoli -->
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('article.index') }}">Tutti gli articoli</a>
+                </li>
                 <!-- Link per inserire un articolo -->
                 @auth
                 <li class="nav-item">
