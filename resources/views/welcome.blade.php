@@ -8,6 +8,12 @@
                         {{ session('message') }}
                     </div>
                 @endif
+
+                @if (session('alert'))
+                    <div class="alert alert-danger">
+                        {{ session('alert') }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -35,4 +41,3 @@
         </div>
     </div>
 </x-layout>
-
