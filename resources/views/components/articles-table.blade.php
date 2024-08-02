@@ -9,26 +9,24 @@
         </tr>
     </thead>
     <tbody>
-           @foreach ($articles as $article)
-           <tr>
-            <th scope="row">{{$article->id}}</th>
-            <td>{{$article->title}}</td>
-            <td>{{$article->subtitle}}</td>
-            <td>{{$article->user->name}}</td>
+        @foreach ($articles as $article)
+        <tr>
+            <th scope="row">{{ $article->id }}</th>
+            <td>{{ $article->title }}</td>
+            <td>{{ $article->subtitle }}</td>
+            <td>{{ $article->user->name }}</td>
             <td>
                 @if (is_null($article->is_accepted))
-                 <a href="{{route('article.show', $article)}}" class="btn btn-secondary">Leggi l'articolo</a>
-                 @else
-                <form action="{{route('revisor.undoArticle', $article)}}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-secondary">Riporta in revisione</button>
-                </form>
-                 @endif
-
-
+                    <a href="{{ route('article.show', $article) }}" class="btn btn-secondary">Leggi l'articolo</a>
+                @else
+                    <form action="{{ route('revisor.undoArticle', $article) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary">Riporta in revisione</button>
+                    </form>
+                @endif
             </td>
-           </tr>
-
-           @endforeach
+        </tr>
+        @endforeach
     </tbody>
 </table>
+
