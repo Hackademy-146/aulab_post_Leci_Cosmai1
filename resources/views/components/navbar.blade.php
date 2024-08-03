@@ -62,6 +62,10 @@
                         <form action="{{ route('logout') }}" method="POST" id="form-logout" class="d-none">
                             @csrf
                         </form>
+                        <!-- Link per il dashboard del revisor -->
+                        @if (Auth::user()->is_revisor)
+                            <li><a class="dropdown-item" href="{{ route('revisor.dashboard') }}">Dashboard Revisor</a></li>
+                        @endif
                     </ul>
                 </li>
                 @endauth
@@ -80,5 +84,3 @@
         </div>
     </div>
 </nav>
-
-

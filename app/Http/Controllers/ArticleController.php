@@ -8,8 +8,7 @@ use App\Models\Article;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use App\Models\Category;
-
-
+use App\Models\User;
 
 class ArticleController extends Controller implements HasMiddleware
 {
@@ -26,10 +25,8 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        $articles = Article::orderBy('created_at', 'desc')->get();
-
+        $articles = Article::where('is_accepted', true)->orderBy('created_at', 'desc')->get();
         return view('article.index', compact('articles'));
-
     }
 
     /**
@@ -44,30 +41,26 @@ class ArticleController extends Controller implements HasMiddleware
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    
-    $request->validate([
-        'title' => 'required|unique:articles|min:5',
-        'subtitle' => 'required|min:5',
-        'body' => 'required|min:10',
-        'image' => 'required|image',
-        'category' => 'required',
-    ]);
+    {
+        $request->validate([
+            'title' => 'required|unique:articles|min:5',
+            'subtitle' => 'required|min:5',
+            'body' => 'required|min:10',
+            'image' => 'required|image',
+            'category' => 'required',
+        ]);
 
-    
-    $article = Article::create([
-        'title' => $request->title,
-        'subtitle' => $request->subtitle,
-        'body' => $request->body,
-        'image' => $request->file('image')->store('public/images'),
-        'category_id' => $request->category,
-        'user_id' => Auth::user()->id,
-    ]);
+        $article = Article::create([
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'body' => $request->body,
+            'image' => $request->file('image')->store('public/images'),
+            'category_id' => $request->category,
+            'user_id' => Auth::user()->id,
+        ]);
 
-    
-    return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
-}
-
+        return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
+    }
 
     /**
      * Display the specified resource.
@@ -103,7 +96,13 @@ class ArticleController extends Controller implements HasMiddleware
 
     public function byCategory(Category $category)
     {
-    $articles = $category->articles()->orderBy('created_at', 'desc')->get();
-    return view('article.by-category', compact('category', 'articles'));
+        $articles = $category->articles()->where('is_accepted', true)->orderBy('created_at', 'desc')->get();
+        return view('article.by-category', compact('category', 'articles'));
+    }
+
+    public function byUser(User $user)
+    {
+        $articles = $user->articles()->where('is_accepted', true)->orderBy('created_at', 'desc')->get();
+        return view('article.by-user', compact('user', 'articles'));
     }
 }
