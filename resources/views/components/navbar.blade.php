@@ -44,10 +44,13 @@
                     <a class="nav-link active" aria-current="page" href="{{ route('homepage') }}">Home</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+            
+            <!-- Integrazione del form di ricerca -->
+            <form action="{{ route('article.search') }}" method="GET" class="d-flex" role="search">
+                <input class="form-control me-2" type="search" name="query" placeholder="Cerca tra gli articoli..." aria-label="Search">
+                <button class="btn btn-outline-secondary" type="submit">Cerca</button>
             </form>
+            
             <!-- Link di autenticazione -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @auth
