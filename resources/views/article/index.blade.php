@@ -20,8 +20,23 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $article->title }}</h5>
                             <p class="card-subtitle">{{ $article->subtitle }}</p>
-                            <p class="small text-muted">Categoria:
-                                <a href="{{ route('article.byCategory', $article->category) }}" class="text-capitalize text-muted">{{ $article->category->name }}</a>
+
+                            <!-- Controllo per la categoria -->
+                            @if ($article->category)
+                                <p class="small text-muted">Categoria:
+                                    <a href="{{ route('article.byCategory', $article->category) }}" class="text-capitalize text-muted">
+                                        {{ $article->category->name }}
+                                    </a>
+                                </p>
+                            @else
+                                <p class="small text-muted">Nessuna categoria</p>
+                            @endif
+
+                            <!-- Controllo per i tag -->
+                            <p class="small text-muted my-3">
+                                @foreach ($article->tags as $tag)
+                                    #{{ $tag->name }}
+                                @endforeach
                             </p>
                         </div>
                         <div class="card-footer d-flex justify-content-between align-items-center">
@@ -35,5 +50,3 @@
         </div>
     </div>
 </x-layout>
-
-

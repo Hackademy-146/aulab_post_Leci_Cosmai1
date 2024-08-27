@@ -13,7 +13,6 @@ use App\Models\Tag;
 
 class ArticleController extends Controller implements HasMiddleware
 {
-
     public static function middleware()
     {
         return [
@@ -42,41 +41,40 @@ class ArticleController extends Controller implements HasMiddleware
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'title' => 'required|unique:articles|min:5',
-        'subtitle' => 'required|min:5',
-        'body' => 'required|min:10',
-        'image' => 'required|image',
-        'category' => 'required',
-        'tags' => 'required'
-    ]);
-
-    $article = Article::create([
-        'title' => $request->title,
-        'subtitle' => $request->subtitle,
-        'body' => $request->body,
-        'image' => $request->file('image')->store('public/images'),
-        'category_id' => $request->category,
-        'user_id' => Auth::user()->id,
-    ]);
-
-    $tags = explode(',', $request->tags);
-
-    foreach($tags as $i => $tag) {
-        $tags[$i] = trim($tag);
-    }
-
-    foreach($tags as $tag) {
-        $newTag = Tag::updateOrCreate([
-            'name' => strtolower($tag),
+    {
+        $request->validate([
+            'title' => 'required|unique:articles|min:5',
+            'subtitle' => 'required|min:5',
+            'body' => 'required|min:10',
+            'image' => 'required|image',
+            'category' => 'required',
+            'tags' => 'required'
         ]);
-        $article->tags()->attach($newTag);
+
+        $article = Article::create([
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'body' => $request->body,
+            'image' => $request->file('image')->store('public/images'),
+            'category_id' => $request->category,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        $tags = explode(',', $request->tags);
+
+        // Trim spaces and convert to lowercase
+        foreach($tags as $i => $tag) {
+            $tags[$i] = strtolower(trim($tag));
+        }
+
+        // Update or create tags and attach them to the article
+        foreach($tags as $tag) {
+            $newTag = Tag::updateOrCreate(['name' => $tag]);
+            $article->tags()->attach($newTag);
+        }
+
+        return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
     }
-
-    return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
-}
-
 
     /**
      * Show the form for editing the specified resource.
@@ -113,15 +111,12 @@ class ArticleController extends Controller implements HasMiddleware
         $articles = $user->articles()->where('is_accepted', true)->orderBy('created_at', 'desc')->get();
         return view('article.by-user', compact('user', 'articles'));
     }
-    public function articleSearch(Request $request){
 
-        $query = $request->input ('query');
+    public function articleSearch(Request $request)
+    {
+        $query = $request->input('query');
         $articles = Article::search($query)->where('is_accepted', true)->orderBy('created_at', 'desc')->get();
       
         return view('article.search-index', compact('articles', 'query'));
-      
-      
-      
-      
-      }
+    }
 }
