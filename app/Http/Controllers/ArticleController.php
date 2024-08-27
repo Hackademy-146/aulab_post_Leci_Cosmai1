@@ -9,6 +9,7 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Tag;
 
 class ArticleController extends Controller implements HasMiddleware
 {
@@ -41,34 +42,41 @@ class ArticleController extends Controller implements HasMiddleware
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|unique:articles|min:5',
-            'subtitle' => 'required|min:5',
-            'body' => 'required|min:10',
-            'image' => 'required|image',
-            'category' => 'required',
-        ]);
+{
+    $request->validate([
+        'title' => 'required|unique:articles|min:5',
+        'subtitle' => 'required|min:5',
+        'body' => 'required|min:10',
+        'image' => 'required|image',
+        'category' => 'required',
+        'tags' => 'required'
+    ]);
 
-        $article = Article::create([
-            'title' => $request->title,
-            'subtitle' => $request->subtitle,
-            'body' => $request->body,
-            'image' => $request->file('image')->store('public/images'),
-            'category_id' => $request->category,
-            'user_id' => Auth::user()->id,
-        ]);
+    $article = Article::create([
+        'title' => $request->title,
+        'subtitle' => $request->subtitle,
+        'body' => $request->body,
+        'image' => $request->file('image')->store('public/images'),
+        'category_id' => $request->category,
+        'user_id' => Auth::user()->id,
+    ]);
 
-        return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
+    $tags = explode(',', $request->tags);
+
+    foreach($tags as $i => $tag) {
+        $tags[$i] = trim($tag);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Article $article)
-    {
-        return view('article.show', compact('article'));
+    foreach($tags as $tag) {
+        $newTag = Tag::updateOrCreate([
+            'name' => strtolower($tag),
+        ]);
+        $article->tags()->attach($newTag);
     }
+
+    return redirect(route('homepage'))->with('message', 'Articolo creato con successo');
+}
+
 
     /**
      * Show the form for editing the specified resource.
