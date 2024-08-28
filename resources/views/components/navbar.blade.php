@@ -59,16 +59,20 @@
                         Ciao {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu">
+                        <!-- Link per il dashboard dello scrittore -->
+                        @if (Auth::user()->is_writer)
+                            <li><a class="dropdown-item" href="{{ route('writer.dashboard') }}">Dashboard Writer</a></li>
+                        @endif
+                        <!-- Link per il dashboard del revisore -->
+                        @if (Auth::user()->is_revisor)
+                            <li><a class="dropdown-item" href="{{ route('revisor.dashboard') }}">Dashboard Revisor</a></li>
+                        @endif
                         <li>
                             <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('form-logout').submit();">Logout</a>
                         </li>
                         <form action="{{ route('logout') }}" method="POST" id="form-logout" class="d-none">
                             @csrf
                         </form>
-                        <!-- Link per il dashboard del revisor -->
-                        @if (Auth::user()->is_revisor)
-                            <li><a class="dropdown-item" href="{{ route('revisor.dashboard') }}">Dashboard Revisor</a></li>
-                        @endif
                     </ul>
                 </li>
                 @endauth
