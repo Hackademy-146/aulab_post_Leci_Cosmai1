@@ -1,11 +1,18 @@
 <x-layout>
-    <div class="container-fluid p-5 bg-secondary-subtle text-center">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <h1 class="display-1">Bentornato, Revisore {{ Auth::user()->name }}</h1>
-            </div>
-        </div>
-    </div>
+    <div class="container-fluid p-5 text-center" 
+    style="background-image: url('/storage/images/immagine.jpeg'); 
+           background-size: cover; 
+           background-position: center;">
+   <div class="row justify-content-center">
+       <div class="col-12">
+           <h1 class="display-4 display-md-2 display-lg-1" 
+               style="font-family: 'Courier New', monospace; color: #ffffff; 
+                      text-shadow: 0 0 10px #00aea2, 0 0 20px #0ff; text-align: center;">
+              Bentornato, Revisore {{ Auth::user()->name }}
+           </h1>
+       </div>
+   </div>
+</div>
 
     @if (session('message'))
         <div class="alert alert-success">

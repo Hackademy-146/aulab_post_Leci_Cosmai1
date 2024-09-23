@@ -10,8 +10,6 @@ use App\Mail\CareerRequestMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
-
-
 class PublicController extends Controller implements HasMiddleware
 {
     public function homepage()
@@ -31,39 +29,37 @@ class PublicController extends Controller implements HasMiddleware
             new Middleware('auth', except: ['homepage']),
         ];
     }
+
     public function careersSubmit(Request $request)
-{
-    $request->validate([
-        'role' => 'required',
-        'email' => 'required|email',
-        'message' => 'required'
-    ]);
+    {
+        $request->validate([
+            'role'    => 'required',
+            'email'   => 'email',
+            'message' => 'required',
+        ]);
 
-    $user = Auth::user();
-    $role = $request->role;
-    $email = $request->email;
-    $message = $request->message;
-    $info = compact('role', 'email', 'message');
+        $user    = Auth::user();
+        $role    = $request->role;
+        $email   = $request->email;
+        $message = $request->message;
+        $info    = compact('role', 'email', 'message');
 
-    Mail::to('admin@theaulabpost.it')->send(new CareerRequestMail($info));
+        Mail::to('admin@theaulabpost.it')->send(new CareerRequestMail($info));
 
-    switch ($role) {
-        case 'admin':
-            $user->is_admin = null;
-            break;
-        case 'revisor':
-            $user->is_revisor = null;
-            break;
-        case 'writer':
-            $user->is_writer = null;
-            break;
+        switch ($role) {
+            case 'admin':
+                $user->is_admin = null;
+                break;
+            case 'revisor':
+                $user->is_revisor = null;
+                break;
+            case 'writer':
+                $user->is_writer = null;
+                break;
+        }
+
+        $user->update();
+
+        return redirect(route('homepage'))->with('message', 'Mail inviata con successo!');
     }
-
-    $user->update();
-
-    return redirect(route('homepage'))->with('message', 'Mail inviata con successo!');
 }
-
-}
-
-

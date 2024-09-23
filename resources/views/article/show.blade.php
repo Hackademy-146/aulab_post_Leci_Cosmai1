@@ -1,12 +1,21 @@
 <x-layout>
-    <div class="container-fluid p-5 bg-secondary-subtle text-center">
+    <!-- Intestazione con immagine di sfondo -->
+    <div class="container-fluid p-5 text-center" 
+        style="background-image: url('/storage/images/immagine.jpeg'); 
+               background-size: cover; 
+               background-position: center;">
         <div class="row justify-content-center">
             <div class="col-12">
-                <h1 class="display-1">{{ $article->title }}</h1>
+                <h1 class="display-4 display-md-2 display-lg-1" 
+                    style="font-family: 'Courier New', monospace; color: #ffffff; 
+                           text-shadow: 0 0 10px rgb(0, 174, 162), 0 0 20px #0ff; text-align: center;">
+                    {{ $article->title }}
+                </h1>
             </div>
         </div>
     </div>
 
+    <!-- Contenuto dell'articolo -->
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 d-flex flex-column">

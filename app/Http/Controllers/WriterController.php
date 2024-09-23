@@ -16,3 +16,13 @@ class WriterController extends Controller
         return view('writer.dashboard', compact('acceptedArticles', 'rejectedArticles', 'unrevisionedArticles'));
     }
 }
+
+
+
+class MessageController extends Controller
+{
+    public function index()
+    {
+        
+    }
+}
